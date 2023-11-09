@@ -1,3 +1,5 @@
+package philosophers;
+
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -11,20 +13,17 @@ public class Main {
     static final Random random = new Random();
 
     public static void main(String[] args) throws InterruptedException {
+        Thread phil1 = new Thread(new Main.Phil("Философ №1"));
+        Thread phil2 = new Thread(new Main.Phil("Философ №2"));
+        Thread phil3 = new Thread(new Main.Phil("Философ №3"));
+        Thread phil4 = new Thread(new Main.Phil("Философ №4"));
+        Thread phil5 = new Thread(new Main.Phil("Философ №5"));
 
-        Thread ph1 = new Thread(new Main.Phil("Философ №1"));
-        Thread ph2 = new Thread(new Main.Phil("Философ №2"));
-        Thread ph3 = new Thread(new Main.Phil("Философ №3"));
-        Thread ph4 = new Thread(new Main.Phil("Философ №4"));
-        Thread ph5 = new Thread(new Main.Phil("Философ №5"));
-
-
-        ph1.start();
-        ph2.start();
-        ph3.start();
-        ph4.start();
-        ph5.start();
-
+        phil1.start();
+        phil2.start();
+        phil3.start();
+        phil4.start();
+        phil5.start();
     }
 
     public static class Phil implements Runnable {
@@ -40,17 +39,17 @@ public class Main {
         public void run() {
             try {
                 Thread.sleep(random.nextInt(10));
-                eat(firstMeal, " обедает первый раз");
+                eating(firstMeal, " обедает первый раз");
                 skipLastEater();
-                eat(secondMeal, " обедает второй раз");
+                eating(secondMeal, " обедает второй раз");
                 skipLastEater();
-                eat(thirdMeal, " обедает третий раз");
+                eating(thirdMeal, " обедает третий раз");
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        public void eat(CountDownLatch count, String meal) throws InterruptedException {
+        public void eating(CountDownLatch count, String meal) throws InterruptedException {
             synchronized (fork) {
                 lastEater = name;
                 System.out.println(name + meal);
@@ -62,7 +61,6 @@ public class Main {
         }
 
         public void skipLastEater() throws InterruptedException {
-
             while (Objects.equals(lastEater, name)) {
                 Thread.sleep(1);
             }
